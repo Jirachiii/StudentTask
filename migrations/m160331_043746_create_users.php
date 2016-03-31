@@ -12,8 +12,8 @@ class m160331_043746_create_users extends Migration
             'st_name'=>$this->string(15)->notNull(),
             'password'=>$this->string(50)->notNull(),
             'status'=>$this->string(10)->notNull(),
-            'authKey'=>$this->string(50)->notNull(),
-            'accessToken'=>$this->string(50)->notNull(),
+            'authKey'=>$this->string(50),
+            'accessToken'=>$this->string(50),
         ]);
         $this->insert('users', [
             'st_id' => '031513218',
