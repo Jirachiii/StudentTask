@@ -15,12 +15,15 @@ use yii\web\AssetBundle;
  */
 class AppAsset extends AssetBundle
 {
+    public $jsOptions = ['position' => \yii\web\View::POS_HEAD];//使资源在head处
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
         'css/site.css',
+        'css/select2.min.css',
     ];
     public $js = [
+        'js/select2.full.min.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

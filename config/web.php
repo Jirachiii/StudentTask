@@ -6,6 +6,8 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'timeZone'=>'Asia/Chongqing',
+    'language' => 'zh-CN',
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -46,6 +48,12 @@ $config = [
             ],
         ],
         */
+    ],
+    'modules' => [      
+        'redactor' => [
+            'class' => 'yii\redactor\RedactorModule',
+                       'imageAllowExtensions'=>['jpg','png','gif']
+                      ],
     ],
     'params' => $params,
 ];
