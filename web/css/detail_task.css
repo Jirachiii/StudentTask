@@ -1,0 +1,19 @@
+.mycursor{
+    cursor: pointer;
+}
+
+#store_inp{
+    width: 50%;
+}
+
+#store{
+    float: right;
+    height: 150px;
+    width: 40%;
+    overflow: auto;
+    box-shadow: 0 0 3px #666;
+}
+
+#store tr   {
+    width: 1000px;
+}

@@ -35,7 +35,7 @@ class Items extends \yii\db\ActiveRecord
         return [
             [['title', 'content', 'create_at', 'create_by', 'status'], 'required'],
             [['content'], 'string'],
-            [['status'], 'integer'],
+            [['status'], 'string'],
             [['create_at', 'update_at', 'create_by', 'update_by','title'], 'string', 'max' => 20],
             [['file_path'], 'string', 'max' => 50],
         ];
@@ -70,4 +70,30 @@ class Items extends \yii\db\ActiveRecord
 //        return $this->hasMany(ItemDetailPerson::className(), ['item_details_id' => 'id'])
 //            ->viaTable('item_details', ['item_id' => 'id']);
 //    }
+
+    public function addDetailTask($item_id,$tasks,$members,$item_id){
+        $connection = \Yii::$app->db;
+        $transaction = $connection->beginTransaction();
+        try {
+            foreach($tasks as $key => $task){
+                $item_detail=new ItemDetail();
+                $item_detail->item_id=$item_id;
+                $item_detail->task_content=$task;
+                $item_detail->create_at='2015';
+                $item_detail->update_at='2016';
+                $item_detail->create_by='jin';
+                $item_detail->update_by='F';
+                $taskMembers=array();
+                foreach($members[$key] as $member){
+                    array_push($taskMembers,$member);
+                }
+                $item_detail->members=implode(',',$taskMembers);
+                $item_detail->save(false);
+
+            }
+            $transaction->commit();
+        } catch(Exception $e) {
+            $transaction->rollBack();
+        }
+    }
 }

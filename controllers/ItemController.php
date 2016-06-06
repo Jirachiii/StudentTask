@@ -3,8 +3,10 @@
 namespace app\controllers;
 
 use app\models\ItemUsers;
+use app\models\StoreReq;
 use app\models\User;
 use app\models\Users;
+use app\models\ItemDetail;
 use Yii;
 use app\models\Items;
 use app\models\ItemSearch;
@@ -32,7 +34,7 @@ class ItemController extends Controller
             ],
             'access' => [
                 'class' => AccessControl::className(),
-                'only'  => ['create','index','view','update'],
+                'only'  => ['create','index','view','update','itemdetail','detailtask','taskinsert'],
                 'rules' => [
                     //只有1级管理员有权限
                     [
@@ -41,6 +43,14 @@ class ItemController extends Controller
                         'roles'         => ['@'],
                         'matchCallback' => function ($rule, $action) {
                             return Yii::$app->user->identity->status == 1;
+                        }
+                    ],
+                    [
+                        'actions'       => ['itemdetail','detailtask','taskinsert'],
+                        'allow'         => true,
+                        'roles'         => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->identity->status == 2;
                         }
                     ],
 
@@ -71,18 +81,32 @@ class ItemController extends Controller
      */
     public function actionView($id)
     {
+        //获取成员
+        $model = $this->findModel($id);
+        $user=new ItemUsers();
+        $members=$user->getItemMembers($model);
+        $members=$user->getItemChineseName($members);
+        //获取中文名
         $author=Items::findOne($id);
         $creater=Users::find()->where(['st_id'=>$author->create_by])->one();
         $updater=Users::find()->where(['st_id'=>$author->update_by])->one();
-        if( $creater){
+        if($creater && $updater){
            return $this->render('view', [
              'model' => $this->findModel($id),
              'creater'=>$creater,
              'updater'=>$updater,
+             'members'=>$members,
+            ]);
+        }elseif($creater){
+            return $this->render('view', [
+             'model' => $this->findModel($id),
+             'creater'=>$creater,
+             'members'=>$members,
             ]);
         }else{
             return $this->render('view', [
-             'model' => $this->findModel($id),
+            'model' => $this->findModel($id),
+            'members'=>$members,
             ]);
         }
         
@@ -95,12 +119,11 @@ class ItemController extends Controller
      */
     public function actionCreate()
     {
-        
         $model = new Items();
         $user=new ItemUsers();
         $allusers=Users::find()->all();
         $model->create_by=Yii::$app->user->identity->st_id;
-        $model->status=1;
+        $model->status='未完成';
         $model->create_at=date('Y-m-d H:i',time());
         if ($model->load(Yii::$app->request->post()) && $user->load(Yii::$app->request->post())) {
             $model->save(false);
@@ -159,8 +182,76 @@ class ItemController extends Controller
         return $this->redirect(['index']);
     }
 
+    /**
+     * 项目负责人的后台界面
+     * @return string
+     */
+    public function  actionItemdetail(){
+        $usernow=Yii::$app->user->identity->st_id;
+        $items=ItemUsers::find()->where(['st_id'=>$usernow])->all();
+        return $this->render('item_detail', [
+                'items'=>$items,
+        ]);
+    }
+
+    /**
+     * 任务分配界面
+     * @param $item_id
+     * @return string
+     */
+    public function  actionDetailtask($item_id){
+        $allusers=Users::find()->all();
+        $allstore_req=StoreReq::find()->where(['item_id'=>$item_id])->all();
+        $alreadyNum=ItemDetail::find()->where(['item_id'=>$item_id])->count();
+        if($alreadyNum!=0){
+            $detailTask=ItemDetail::find()->where(['item_id'=>$item_id])->asArray()->all();
+            return $this->render('detail_task', [
+                'item_id'=>$item_id,
+                'allusers'=>$allusers,
+                'alreadyNum'=>$alreadyNum,
+                'detailTask'=>$detailTask,
+                'allstore_req'=>$allstore_req,
+
+            ]);
+        }else{
+            return $this->render('detail_task', [
+                'item_id'=>$item_id,
+                'allusers'=>$allusers
+            ]);
+        }
+
+    }
+
+    /**
+     * 执行项目任务安排的插入
+     */
+    public function  actionTaskinsert(){
+        if(!isset($_POST['item_id'])||!isset($_POST['task'])||!isset($_POST['member'])){
+            echo "<script>alert('请填写完整')</script>";
+            echo "<script>window.history.go(-1)</script>";
+            return false;
+        }
+        $item_id=$_POST['item_id'];
+        $tasks=$_POST['task'];
+        $members=$_POST['member'];
+        $already=ItemDetail::deleteAll(['item_id'=>$item_id]);
+//        $already->delete();
+        $items=new Items();
+        $items->addDetailTask($item_id,$tasks,$members,$item_id);
+        //物料申请插入
+        if(isset($_POST['store_req'])&&trim($_POST['store_req'])!=''){
+            $store=new StoreReq();
+            $store->insertStoreReq($_POST['store_req'],$item_id);
+        }
+
+//        $success='success';
+        $usernow=Yii::$app->user->identity->st_id;
+        $items=ItemUsers::find()->where(['st_id'=>$usernow])->all();
+        return $this->redirect(['itemdetail']);
 
 
+
+    }
     public function actionMobile($id){
         // print_r(Yii::$app->user->identity->st_id );die;
         $info=(new Query)->from('items')->where(['id'=>$id])->one();
@@ -186,6 +277,8 @@ class ItemController extends Controller
         print_r($result);
     }
 
+
+
     public function  actionMobileitemcreate($title,$content,$st_id,$publisher){
         $connection = \Yii::$app->db;
         try {
@@ -196,7 +289,7 @@ class ItemController extends Controller
             $model->content=$content;
             $model->create_by=$publisher;
             $model->status=1;
-            $model->create_at=date('Y-m-d-H:i',time());
+            $model->create_at=date('Y-m-d H:i',time());
             $model->save(false);
             $memberArray=explode(',',$st_id);
             $user->insertMembers($memberArray,$model->id);

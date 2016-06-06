@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-
+use yii\db\Query;
 /**
  * This is the model class for table "item_users".
  *
@@ -44,9 +44,11 @@ class ItemUsers extends \yii\db\ActiveRecord
             'st_id' => '成员',
         ];
     }
-
+    public function getIteminfo(){
+        return $this->hasMany(Items::className(), ['id' => 'item_id']);
+    }
     /**
-     * 虎丘成员数组
+     * 获取成员数组
      * @param $model
      * @return array
      */
@@ -58,6 +60,14 @@ class ItemUsers extends \yii\db\ActiveRecord
         }
         return $members;
     }
+    public function getItemChineseName($members){
+        $chinesename=array();
+        foreach ($members as $value) {
+            $theone=Users::find()->where(['st_id'=>$value])->one();
+            $chinesename[]=$theone->st_name;
+        }
+        return $chinesename;
+    }
     public function insertMembers($users,$itemid){
         self::deleteAll('item_id = :item_id ', [':item_id' => $itemid]);
         foreach($users as $value){
@@ -67,5 +77,24 @@ class ItemUsers extends \yii\db\ActiveRecord
             $member->save(false);
 
         }
+    }
+
+    /**
+     * 获取发布者的中文名
+     * @param $name
+     * @return array|bool
+     */
+    public function getChineseName($name){
+        $Cname=(new Query())->select('st_name')->from('users')->where(['st_id'=>$name])->one();
+        return $Cname;
+    }
+    public function getStudentAdmins($id){
+        $adminStr='';
+        $admins=(new Query())->select('st_id')->from('item_users')->where(['item_id'=>$id])->all();
+        foreach($admins as $key=>$arr){
+            $Cnmae=(new Query())->select('st_name')->from('users')->where(['st_id'=>$arr['st_id']])->one();
+            $adminStr.='   '.$Cnmae['st_name'];
+        }
+        return $adminStr;
     }
 }

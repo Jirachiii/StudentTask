@@ -27,7 +27,7 @@ use yii\helpers\ArrayHelper;
     ])?>
     <?php $member=ArrayHelper::map($allusers, 'st_id', 'st_name') ?>
 
-    <?= $form->field($user, 'st_id')->dropDownList($member,['multiple'=>'multiple'])->label('此任务成员') ?>
+    <?= $form->field($user, 'st_id')->dropDownList($member,['multiple'=>'multiple'])->label('此任务负责人') ?>
 
 
 
