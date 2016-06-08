@@ -200,8 +200,10 @@ class ItemController extends Controller
      * @return string
      */
     public function  actionDetailtask($item_id){
+        $allstore_req=StoreReq::getStores($item_id);
+
         $allusers=Users::find()->all();
-        $allstore_req=StoreReq::find()->where(['item_id'=>$item_id])->all();
+//        $allstore_req=StoreReq::find()->where(['item_id'=>$item_id])->all();
         $alreadyNum=ItemDetail::find()->where(['item_id'=>$item_id])->count();
         if($alreadyNum!=0){
             $detailTask=ItemDetail::find()->where(['item_id'=>$item_id])->asArray()->all();

@@ -33,6 +33,21 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
+    if(!Yii::$app->user->isGuest){
+        if (Yii::$app->user->identity->status == 1) {
+            $view="管理员后台";
+            $url=array('/item/index');
+        }elseif(Yii::$app->user->identity->status == 2){
+            $view="项目负责人后台";
+            $url=array('/item/itemdetail');
+        }elseif(Yii::$app->user->identity->status == 3){
+            $view="物料管理员后台";
+            $url=array('/store/index');
+        } else{
+            $url=array('/xxx/index');
+
+        }
+    }
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
@@ -46,7 +61,7 @@ AppAsset::register($this);
                 'label' => '用户 (' . Yii::$app->user->identity->st_name . ')',
                 'items'=>[
                     ['label' => '注销', 'url' => ['/site/logout'],'linkOptions' => ['data-method' => 'post']],
-//                    ['label'=> '查看状态', 'url'=>['/record/index']]
+                    ['label'=>$view, 'url'=>$url],
                 ]
             ]
             )

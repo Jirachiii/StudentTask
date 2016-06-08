@@ -3,6 +3,7 @@
         <tr>
             <th>申请时间</th>
             <th>申请内容</th>
+            <th>申请人</th>
             <th>状态</th>
         </tr>
         <?php
@@ -12,6 +13,7 @@
 <tr>
     <td>{$store_req->apply_time}</td>
     <td>{$store_req->apply_text}</td>
+    <td>{$store_req->apply_user}</td>
     <td>{$store_req->apply_status}</td>
 </tr>
 EOF;

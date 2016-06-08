@@ -1,3 +1,18 @@
-.mycursor{
+/*.mycursor{*/
+    /*cursor: pointer;*/
+/*}*/
+.status_op{
+    border: 1px solid #909090;
+    box-shadow: 0 0 6px #666;
+    border-radius: 5px;
+    width: 200px;
+    height: 200px;
+    position: fixed;
+    top: 1px;
+    left: 1px;
+    background-color: #eeeeff;
+    z-index: 9999999;
+}
+.glyphicon{
     cursor: pointer;
 }
