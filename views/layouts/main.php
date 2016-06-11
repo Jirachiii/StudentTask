@@ -27,24 +27,27 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'My Company',
+        'brandLabel' => '学生工作站管理系统',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
     if(!Yii::$app->user->isGuest){
-        if (Yii::$app->user->identity->status == 1) {
+        if (Yii::$app->user->identity->status == '管理员') {
             $view="管理员后台";
             $url=array('/item/index');
-        }elseif(Yii::$app->user->identity->status == 2){
+        }elseif(Yii::$app->user->identity->status == '干部'){
             $view="项目负责人后台";
             $url=array('/item/itemdetail');
-        }elseif(Yii::$app->user->identity->status == 3){
+            $view1="我参与的项目";
+            $url1=array('/item/myitem');
+        }elseif(Yii::$app->user->identity->status == '物料管理员'){
             $view="物料管理员后台";
             $url=array('/store/index');
         } else{
-            $url=array('/xxx/index');
+            $view="我参与的项目";
+            $url=array('/item/myitem');
 
         }
     }
@@ -62,6 +65,7 @@ AppAsset::register($this);
                 'items'=>[
                     ['label' => '注销', 'url' => ['/site/logout'],'linkOptions' => ['data-method' => 'post']],
                     ['label'=>$view, 'url'=>$url],
+                    isset($view1)?['label'=>$view1, 'url'=>$url1]:'',
                 ]
             ]
             )
@@ -80,9 +84,9 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-left">&copy; 学生工作站管理系统 <?= date('Y') ?></p>
 
-        <p class="pull-right"><?= Yii::powered() ?></p>
+<!--        <p class="pull-right">--><?//= Yii::powered() ?><!--</p>-->
     </div>
 </footer>
 

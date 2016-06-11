@@ -44,4 +44,26 @@ class StoreTab extends \yii\db\ActiveRecord
             'store_num' => 'Store Num',
         ];
     }
+
+    public static function changeStoreNum($id,$type,$num){
+        if($type=='plus'){
+            $store=StoreTab::findOne($id);
+            $store->store_num=$store->store_num+intval($num);
+            if($store->save(false)){
+                $addRecord=StoreRecord::addRecord($store,'进库',$num);
+                return '{"success":true,"msg":"操作成功"}';
+            }
+        }else{
+            $store=StoreTab::findOne($id);
+            //要减去的数量大于剩余数量
+            if(intval($num)>$store->store_num){
+                return '{"success":false,"msg":"剩余没有这么多了"}';
+            }
+            $store->store_num=$store->store_num-intval($num);
+            if($store->save(false)){
+                $addRecord=StoreRecord::addRecord($store,'出库',$num);
+                return '{"success":true,"msg":"操作成功"}';
+            }
+        }
+    }
 }

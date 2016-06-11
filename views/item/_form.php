@@ -8,6 +8,7 @@ use yii\helpers\ArrayHelper;
 /* @var $this yii\web\View */
 /* @var $model app\models\Items */
 /* @var $form yii\widgets\ActiveForm */
+$status_change=array('未完成'=>'未完成','已完成'=>'已完成','负责人申请完成'=>'负责人申请完成');
 ?>
 
 <div class="items-form">
@@ -28,6 +29,7 @@ use yii\helpers\ArrayHelper;
     <?php $member=ArrayHelper::map($allusers, 'st_id', 'st_name') ?>
 
     <?= $form->field($user, 'st_id')->dropDownList($member,['multiple'=>'multiple'])->label('此任务负责人') ?>
+    <?= $form->field($model, 'status')->dropDownList($status_change); ?>
 
 
 

@@ -3,6 +3,7 @@
 namespace app\controllers;
 use app\models\StoreRecord;
 use app\models\StoreTab;
+use app\models\Users;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii;
@@ -30,7 +31,7 @@ class StoreController extends \yii\web\Controller
                         'allow'         => true,
                         'roles'         => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return Yii::$app->user->identity->status == 3;
+                            return Yii::$app->user->identity->status == '物料管理员';
                         }
                     ],
 
@@ -43,6 +44,10 @@ class StoreController extends \yii\web\Controller
         $status='';
         $items=Items::find()->all();
         $stores=StoreReq::find()->all();
+        foreach($stores as $store){
+            $user=Users::find()->where(['st_id'=>$store->apply_user])->one();
+            $store->apply_user=$user->st_name;
+        }
         return $this->render('index',[
             'items'=>$items,
             'stores'=>$stores
@@ -72,8 +77,22 @@ class StoreController extends \yii\web\Controller
      * 获取所有库存
      */
     public function actionGetstores(){
-        $stores=StoreTab::find()->asArray()->all();
-        echo '{"success":true,"stores":'.json_encode($stores,JSON_UNESCAPED_UNICODE).'}';
+        if(!empty($_GET['searchName'])&&isset($_GET['searchName'])){
+            $stores=StoreTab::find()->where(['like','store_name',$_GET['searchName']])->asArray()->all();
+            echo '{"success":true,"stores":'.json_encode($stores,JSON_UNESCAPED_UNICODE).'}';
+        }else{
+            $stores=StoreTab::find()->asArray()->all();
+            echo '{"success":true,"stores":'.json_encode($stores,JSON_UNESCAPED_UNICODE).'}';
+        }
+
+
+    }
+    /**
+     * 获取所有操作记录
+     */
+    public function actionGetrecords(){
+        $stores=StoreRecord::find()->asArray()->all();
+        echo '{"success":true,"records":'.json_encode($stores,JSON_UNESCAPED_UNICODE).'}';
 
     }
 
@@ -99,6 +118,23 @@ class StoreController extends \yii\web\Controller
         }
         echo '{"success":true,"msg":"操作成功"}';
     }
+
+    /**
+     * 修改库存数量
+     */
+    public function actionChangenum(){
+        if (empty($_POST["change_num"]) || !isset($_POST["change_num"])) {
+            echo '{"success":false,"msg":"填写错误"}';
+            return;
+        }
+        if (empty($_POST["change_id"]) || !isset($_POST["change_id"])||empty($_POST["changetype"]) || !isset($_POST["changetype"])) {
+            echo '{"success":false,"msg":"信息获取错误，尝试刷新重试"}';
+            return;
+        }
+        $result=StoreTab::changeStoreNum($_POST["change_id"],$_POST["changetype"],$_POST["change_num"]);
+
+        echo $result;
+    }
     /**
      * 删除库存
      */
@@ -108,7 +144,9 @@ class StoreController extends \yii\web\Controller
             return;
         }
         $theStore=StoreTab::findOne($_POST['store_id']);
-        $theStore->delete();
+        if($theStore->delete()){
+            $addRecord=StoreRecord::addRecord($theStore,'删除');
+        };
         echo '{"success":true}';
     }
 

@@ -48,10 +48,10 @@ class Users extends \yii\db\ActiveRecord {
     {
         return [
             'id' => 'ID',
-            'st_id' => 'St ID',
-            'st_name' => 'St Name',
-            'password' => 'Password',
-            'status' => 'Status',
+            'st_id' => '学号',
+            'st_name' => '姓名',
+            'password' => '密码',
+            'status' => '权限',
             'authKey' => 'Auth Key',
             'accessToken' => 'Access Token',
         ];

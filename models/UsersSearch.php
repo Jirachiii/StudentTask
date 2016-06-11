@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Items;
+use app\models\Users;
 
 /**
- * ItemSearch represents the model behind the search form about `app\models\Items`.
+ * UsersSearch represents the model behind the search form about `app\models\Users`.
  */
-class ItemSearch extends Items
+class UsersSearch extends Users
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class ItemSearch extends Items
     public function rules()
     {
         return [
-            [['id', 'create_by', 'update_by'], 'integer'],
-            [['title', 'content', 'create_at', 'update_at','status'], 'safe'],
+            [['id'], 'integer'],
+            [['st_id', 'st_name', 'password', 'status', 'authKey', 'accessToken'], 'safe'],
         ];
     }
 
@@ -41,9 +41,10 @@ class ItemSearch extends Items
      */
     public function search($params)
     {
-        $query = Items::find();
+        $query = Users::find();
 
         // add conditions that should always apply here
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
@@ -51,7 +52,7 @@ class ItemSearch extends Items
             ],
             'sort' => [
                 'defaultOrder' => [
-                    'create_at' => SORT_DESC,
+                    'status' => SORT_DESC,
 //                    'title' => SORT_ASC,
                 ]
             ],
@@ -68,16 +69,14 @@ class ItemSearch extends Items
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-//            'create_by' => $this->create_by,
-//            'update_by' => $this->update_by,
-//            'status' => $this->status,
         ]);
 
-        $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'content', $this->content])
-            ->andFilterWhere(['like', 'create_at', $this->create_at])
-            ->andFilterWhere(['like', 'status', $this->status])
-            ->andFilterWhere(['like', 'update_at', $this->update_at]);
+        $query->andFilterWhere(['like', 'st_id', $this->st_id])
+            ->andFilterWhere(['like', 'st_name', $this->st_name])
+            ->andFilterWhere(['like', 'password', $this->password])
+            ->andFilterWhere(['like', 'status',$this->status,false])
+            ->andFilterWhere(['like', 'authKey', $this->authKey])
+            ->andFilterWhere(['like', 'accessToken', $this->accessToken]);
 
         return $dataProvider;
     }

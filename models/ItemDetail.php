@@ -34,7 +34,7 @@ class ItemDetail extends \yii\db\ActiveRecord
             [['id', 'item_id', 'task_content', 'create_at', 'create_by'], 'required'],
             [['id', 'item_id'], 'integer'],
             [['task_content'], 'string', 'max' => 30],
-            [['create_at', 'update_at', 'create_by', 'update_by'], 'string', 'max' => 20],
+            [['create_at','update_by'], 'string', 'max' => 20],
             [['members'], 'string', 'max' => 200],
         ];
     }

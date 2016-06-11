@@ -10,12 +10,11 @@ use Yii;
  * @property integer $id
  * @property string $title
  * @property string $content
- * @property string $file_path
  * @property string $create_at
  * @property string $update_at
  * @property string $create_by
  * @property string $update_by
- * @property integer $status
+ * @property string $status
  */
 class Items extends \yii\db\ActiveRecord
 {
@@ -37,7 +36,6 @@ class Items extends \yii\db\ActiveRecord
             [['content'], 'string'],
             [['status'], 'string'],
             [['create_at', 'update_at', 'create_by', 'update_by','title'], 'string', 'max' => 20],
-            [['file_path'], 'string', 'max' => 50],
         ];
     }
 
@@ -79,10 +77,10 @@ class Items extends \yii\db\ActiveRecord
                 $item_detail=new ItemDetail();
                 $item_detail->item_id=$item_id;
                 $item_detail->task_content=$task;
-                $item_detail->create_at='2015';
-                $item_detail->update_at='2016';
-                $item_detail->create_by='jin';
-                $item_detail->update_by='F';
+                $item_detail->create_at=date('Y-m-d H:i',time());
+//                $item_detail->update_at='2016';
+                $item_detail->create_by=Yii::$app->user->identity->st_id;
+//                $item_detail->update_by='F';
                 $taskMembers=array();
                 foreach($members[$key] as $member){
                     array_push($taskMembers,$member);
@@ -95,5 +93,47 @@ class Items extends \yii\db\ActiveRecord
         } catch(Exception $e) {
             $transaction->rollBack();
         }
+    }
+
+    /**
+     * 个人任务查看
+     * @return array
+     */
+    public  function getMyItems(){
+        $usernow=Yii::$app->user->identity->st_id;
+        $task_in=ItemDetail::find()->select('item_id')->where(['like','members',$usernow])->asArray()->all();
+        $items=array();
+        foreach($task_in as $item){
+            array_push($items,$item['item_id']);
+        }
+        $items=array_unique($items);
+        return $items;
+    }
+
+    /**
+     * @param $id
+     */
+    public function showItemDetails($itemid){
+        $details=ItemDetail::find()->where(['item_id'=>$itemid])->asArray()->all();
+        foreach($details as $key=>$one){
+            $members=array();
+            $members=explode(',',$one['members']);
+            $memArr=array();
+            foreach($members as $personid){
+                $student=Users::find()->select('st_name')->where(['st_id'=>$personid])->one();
+                array_push($memArr,$student->st_name);
+            }
+            $memStr=implode(',',$memArr);
+            $details[$key]['members']= $memStr;
+
+        }
+
+        $stores=StoreReq::find()->where(['item_id'=>$itemid])->asArray()->all();
+        foreach($stores as $key=>$one){
+            $person=Users::find()->where(['st_id'=>$one['apply_user']])->one();
+            $stores[$key]['apply_user']=$person->st_name;
+        }
+        $item=Items::find()->where(['id'=>$itemid])->asArray()->one();
+        return '{"success":true,"item":'.json_encode($item,JSON_UNESCAPED_UNICODE).',"details":'.json_encode($details,JSON_UNESCAPED_UNICODE).',"store":'.json_encode($stores,JSON_UNESCAPED_UNICODE).'}';
     }
 }

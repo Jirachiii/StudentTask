@@ -11,7 +11,7 @@ use app\models\ItemUsers;
             <th>项目发布者</th>
             <th>项目负责人</th>
             <th>项目状态</th>
-            <th>任务分配</th>
+            <th>项目管理</th>
         </tr>
         <?php
             foreach($items as $item){
@@ -26,8 +26,11 @@ use app\models\ItemUsers;
                     <td>{$create_by_CN['st_name']}</td>
                     <td>{$st_admins}</td>
                     <td>{$info['status']}</td>
-                    <td><a href='index.php?r=item/detailtask&item_id={$info['id']}' class='glyphicon glyphicon-pencil myedit'></a>
-                    <a class='glyphicon glyphicon-eye-open myedit' onclick='javascript:alert("以后写：ajax从中间弹出");'><a/>
+                    <td>
+                        <a href='index.php?r=item/detailtask&item_id={$info['id']}' class='glyphicon glyphicon-pencil myedit'></a>
+                        <span class='glyphicon glyphicon-eye-open myedit' onclick='showItemDetail({$info['id']})'></span>
+                        <span class='glyphicon glyphicon glyphicon-ok-sign myedit' onclick='statusChange({$info['id']})'></span>
+                        <span class='glyphicon glyphicon glyphicon-remove-sign myedit' onclick='statusChangeback({$info['id']})'></span>
                     </td>
                 </tr>
 EOF;
@@ -36,3 +39,27 @@ EOF;
         ?>
     </table>
 </section>
+<section id="back_click_hide" onclick="hideDetail()">
+
+</section>
+<section id="item_detail_hidden">
+    <span class="pull-right glyphicon glyphicon-remove"></span>
+    <p>项目内容</p>
+    <div id="item_content">
+
+    </div>
+    <p>项目任务表</p>
+    <div>
+        <table  id="item_detail_content" border="1">
+
+        </table>
+    </div>
+    <p>物料申请记录</p>
+    <div>
+        <table  id="item_store_req" border="1">
+
+        </table>
+    </div>
+    <p id="msg_show"></p>
+</section>
+<?php $this->registerJsFile('js/item_detail.js');?>

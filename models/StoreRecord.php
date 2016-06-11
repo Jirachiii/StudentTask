@@ -52,7 +52,14 @@ class StoreRecord extends \yii\db\ActiveRecord
             'change_type' => 'Change Type',
         ];
     }
-    public static function addRecord($store,$change_info){
+
+    /**
+     * 库存记录
+     * @param $store
+     * @param $change_info
+     * @return bool
+     */
+    public static function addRecord($store,$change_info,$changenum=null){
         $record=new StoreRecord();
         $user=yii::$app->user->identity->st_id;
         switch ($change_info){
@@ -60,10 +67,13 @@ class StoreRecord extends \yii\db\ActiveRecord
                 $info='新增了新物料：'.$store->store_name;
                 break;
             case '进库':
-                $info='添加了新物料：'.$store->store_name;//xxx：新进了xx个
+                $info=$store->store_name.":新增了".$changenum.',现有:'.$store->store_num;//xxx：新进了xx个
                 break;
             case '出库':
-                $info='添加了新物料：'.$store->store_name;
+                $info=$store->store_name.":减少了".$changenum.',现有:'.$store->store_num;
+                break;
+            case '删除':
+                $info='删除了物料：'.$store->store_name.",删除前有：".$store->store_num;
                 break;
         }
         $record->store_id=$store->id;

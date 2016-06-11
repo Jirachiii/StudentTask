@@ -7,8 +7,9 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\ItemSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Items';
+$this->title = '项目管理';
 $this->params['breadcrumbs'][] = $this->title;
+$itemstatus=['未完成'=>'未完成','已完成'=>'已完成','负责人申请完成'=>'负责人申请完成'];
 ?>
 <div class="items-index">
 
@@ -16,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Items', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('创建项目', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -32,7 +33,12 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'update_at',
             // 'create_by',
             // 'update_by',
-             'status',
+            [
+                'attribute' => 'status',
+                'filter' => Html::activeDropDownList($searchModel,'status',$itemstatus,['class'=>'form-control','prompt' =>'显示全部']),
+            ],
+
+//            'status',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

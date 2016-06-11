@@ -11,6 +11,7 @@ foreach ($member as $key=>$value ) {
 EOF;
     isset($alreadyNum)?null:$alreadyNum=0;
     isset($detailTask)?null:$detailTask=array();
+    isset($allstore_req)?null:$allstore_req='';
 
 }
 
@@ -60,7 +61,6 @@ EOF;
 <!--    --><?php //ActiveForm::end(); ?>
 
 </section>
-
 <?php $this->registerJsFile('js/detail_task.js');?>
 <?php $this->registerCssFile('css/detail_task.css');?>
 <?php

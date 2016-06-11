@@ -34,7 +34,7 @@ class ItemController extends Controller
             ],
             'access' => [
                 'class' => AccessControl::className(),
-                'only'  => ['create','index','view','update','itemdetail','detailtask','taskinsert'],
+                'only'  => ['create','index','view','update','itemdetail','detailtask','taskinsert','myitem'],
                 'rules' => [
                     //只有1级管理员有权限
                     [
@@ -42,7 +42,7 @@ class ItemController extends Controller
                         'allow'         => true,
                         'roles'         => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return Yii::$app->user->identity->status == 1;
+                            return Yii::$app->user->identity->status == '管理员';
                         }
                     ],
                     [
@@ -50,8 +50,13 @@ class ItemController extends Controller
                         'allow'         => true,
                         'roles'         => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return Yii::$app->user->identity->status == 2;
+                            return Yii::$app->user->identity->status == '干部';
                         }
+                    ],
+                    [
+                        'actions'       => ['myitem'],
+                        'allow'         => true,
+                        'roles'         => ['@'],
                     ],
 
                 ],
@@ -65,6 +70,7 @@ class ItemController extends Controller
      */
     public function actionIndex()
     {
+        $this->layout='@app/views/layouts/column_r.php';
         $searchModel = new ItemSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -121,7 +127,7 @@ class ItemController extends Controller
     {
         $model = new Items();
         $user=new ItemUsers();
-        $allusers=Users::find()->all();
+        $allusers=Users::find()->where(['status'=>'干部'])->all();
         $model->create_by=Yii::$app->user->identity->st_id;
         $model->status='未完成';
         $model->create_at=date('Y-m-d H:i',time());
@@ -152,12 +158,13 @@ class ItemController extends Controller
         $members=$user->getItemMembers($model);
 //        print_r($members);die;
         $user->st_id=$members;
-        $allusers=Users::find()->all();
+//        $allusers=Users::find()->all();
+        $allusers=Users::find()->where(['status'=>'干部'])->all();
         $model->update_by=Yii::$app->user->identity->st_id;
-        $model->status=1;
-        $model->update_at=date('Y-m-d-H:i',time());
+//        $model->status=1;
+        $model->update_at=date('Y-m-d H:i',time());
         if ($model->load(Yii::$app->request->post()) && $user->load(Yii::$app->request->post())) {
-            $model->save();
+            $model->save(false);
             $user->insertMembers($user->st_id,$id);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -193,7 +200,52 @@ class ItemController extends Controller
                 'items'=>$items,
         ]);
     }
+    /**
+     * 项目负责人后台查看任务详情
+     */
+    public function actionItemdetailview(){
+        if(!isset($_GET['id'])||empty($_GET['id'])){
+            echo '{"success":false,"msg":"请求失败"}';
+            return false;
+        }
+        $itemModel=new Items();
+        $result=$itemModel->showItemDetails($_GET['id']);
+        echo $result;
 
+    }
+
+    /**
+     * 申请完成项目
+     * @return bool
+     */
+    public function actionChangestatus(){
+        if(!isset($_POST['id'])||empty($_POST['id'])){
+            echo '{"success":false,"msg":"请求失败"}';
+            return false;
+        }
+        $id=$_POST['id'];
+        $item=Items::findOne($id);
+        $item->status='负责人申请完成';
+        if($item->save()){
+            echo '{"success":true,"msg":"申请成功"}';
+        }
+    }
+    /**
+     * 撤销申请完成项目（重置为未完成）
+     * @return bool
+     */
+    public function actionChangestatusback(){
+        if(!isset($_POST['id'])||empty($_POST['id'])){
+            echo '{"success":false,"msg":"请求失败"}';
+            return false;
+        }
+        $id=$_POST['id'];
+        $item=Items::findOne($id);
+        $item->status='未完成';
+        if($item->save()){
+            echo '{"success":true,"msg":"重置成功"}';
+        }
+    }
     /**
      * 任务分配界面
      * @param $item_id
@@ -202,7 +254,9 @@ class ItemController extends Controller
     public function  actionDetailtask($item_id){
         $allstore_req=StoreReq::getStores($item_id);
 
-        $allusers=Users::find()->all();
+//        $allusers=Users::find()->all();
+        $allusers=Users::find()->where(['or','status=:status1','status=:status2'],[':status1'=>'干部',':status2'=>'部员'])->all();
+
 //        $allstore_req=StoreReq::find()->where(['item_id'=>$item_id])->all();
         $alreadyNum=ItemDetail::find()->where(['item_id'=>$item_id])->count();
         if($alreadyNum!=0){
@@ -254,6 +308,27 @@ class ItemController extends Controller
 
 
     }
+
+
+    /**
+     * @return string
+     * 我参与的项目
+     */
+    public function actionMyitem(){
+        $itemmodel=new Items();
+        $items=$itemmodel->getMyItems();
+
+//        $details=
+        $myitems=Items::find()->where(['id'=>$items])->all();
+
+        return $this->render('myitem', [
+            'myitems'=>$myitems,
+        ]);
+    }
+
+
+
+
     public function actionMobile($id){
         // print_r(Yii::$app->user->identity->st_id );die;
         $info=(new Query)->from('items')->where(['id'=>$id])->one();

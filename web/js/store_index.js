@@ -26,10 +26,6 @@ $(function(){
         Mouse(e);
         $("#store_op_add").css({top:toppos,left:leftpos}).fadeIn(100);
     });
-    //数量更改按钮
-    //aaa=$(".glyphicon-plus").bind("click",function(e){
-    //   alert('12');
-    //})
     //关闭
     $(".glyphicon-remove").bind("click",function(e){
         $(this).parent().hide();
@@ -52,7 +48,7 @@ function req_submit(){
                 $("#status_change").val()
                 $("tr").each(function(){
                     if($(this).children('td:eq(0)').html()==id){
-                        $(this).children('td:eq(5)').html(data.status);
+                        $(this).children('td:eq(6)').html(data.status);
                     }
                 })
                 $("#msg_show").html(data.msg)
@@ -65,20 +61,53 @@ function req_submit(){
         })
 
 }
-//显示所有库存
+//显示所有库存按钮
+function getAllStores(){
+    $("#store_search").val('')
+    getStores()
+}
+
+//显示所有库存&&搜索库存
 function getStores(){
-    var tab=' <table border="1"> <tr><th hidden="hidden">货物id</th><th>物料名</th><th>数量</th><th>操作</th></tr>';
+    var tab=' <table border="1"> <tr><th hidden="hidden">货物id</th><th>操作信息</th><th>操作时间</th><th>操作类型</th></tr>';
     $.ajax({
         url: 'index.php?r=store/getstores',
+        type: 'GET',
+        dataType: 'json',
+        data: {
+            searchName:　$("#store_search").val(),
+        }
+    })
+        .done(function(data) {
+            if(data.success==true){
+                for(var i=0;i<data.stores.length;i++){
+                    tab+='<tr><td hidden="hidden">'+data.stores[i]['id']+'</td><td>'+data.stores[i]['store_name']+'</td><td>'+data.stores[i]['store_num']+'</td>' +
+                        '<td><span class="glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-minus"></span>' +
+                        '<span class="glyphicon glyphicon-trash" onclick="store_delete('+data.stores[i]["id"]+')"></span></td></tr>';
+                }
+                tab+='</table>';
+                $("#store_tab").html(tab)
+                bindBtn()
+            }else{
+                $("#store_tab").html(data.msg)
+            }
+        })
+
+}
+
+//显示所有操作记录
+function getRecords(){
+    var tab=' <table border="1"> <tr><th>货物id</th><th>物料名</th><th>数量</th><th>操作</th></tr>';
+    $.ajax({
+        url: 'index.php?r=store/getrecords',
         type: 'GET',
         dataType: 'json',
     })
         .done(function(data) {
             if(data.success==true){
-                for(var i=0;i<data.stores.length;i++){
-                    tab+='<tr><td>'+data.stores[i]['store_name']+'</td><td>'+data.stores[i]['store_num']+'</td>' +
-                        '<td><span class="glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-minus"></span>' +
-                        '<span class="glyphicon glyphicon-trash" onclick="store_delete('+data.stores[i]["id"]+')"></span></td></tr>';
+                for(var i=0;i<data.records.length;i++){
+                    tab+='<tr><td>'+data.records[i]['store_id']+'</td><td>'+data.records[i]['changeinfo']+'</td><td>'+data.records[i]['change_time']+'</td>' +
+                        '<td>'+data.records[i]['change_type']+'</td></tr>';
                 }
                 tab+='</table>';
                 $("#store_tab").html(tab)
@@ -119,6 +148,27 @@ function store_add_submit(){
  * @param id
  */
 function store_PM_submit(){
+    $.ajax({
+        url: 'index.php?r=store/changenum',
+        type: 'POST',
+        dataType: 'json',
+        data: {change_id: $("#change_id").html(),
+            change_num:  Number($("#store_PM_num").val()),
+            changetype: $("#change_type").html()
+        },
+    })
+        .done(function(data) {
+            if(data.success==true){
+                getStores();
+                $("#store_PM_num").val('');
+                $("#msg_store_PM").html(data.msg)
+            }else{
+                $("#msg_store_PM").html(data.msg)
+            }
+        })
+        .fail(function() {
+            console.log("error");
+        })
 }
 
 /**
@@ -148,8 +198,28 @@ function store_delete(id){
 
     }
 }
+
+
+
 function bindBtn(){
-    aaa=$(".glyphicon-plus").bind("click",function(e){
-        alert('12');
-    })
+    //增加的按钮
+        $(".glyphicon-plus").bind("click",function(e){
+            $("#text_til").html("输入增加的数量")
+            $("#msg_store_PM").html("")
+            $("#store_PM_num").val('');
+            $("#change_type").html('plus')
+            $("#change_id").html($(this).parent().parent().children('td:eq(0)').html())
+            Mouse(e);
+            $("#store_op_PM").css({top:toppos,left:leftpos}).fadeIn(100);
+         })
+    //减少的按钮
+        $(".glyphicon-minus").bind("click",function(e){
+            $("#text_til").html("输入减少的数量")
+            $("#msg_store_PM").html("")
+            $("#store_PM_num").val('');
+            $("#change_type").html('minus')
+            $("#change_id").html($(this).parent().parent().children('td:eq(0)').html())
+            Mouse(e);
+            $("#store_op_PM").css({top:toppos,left:leftpos}).fadeIn(100);
+        })
 }

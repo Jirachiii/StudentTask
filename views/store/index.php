@@ -37,6 +37,7 @@
     <!--            <th>申请人</th>-->
                 <th>项目内容</th>
                 <th>申请内容</th>
+                <th>申请人</th>
                 <th>审批状态</th>
                 <th>操作</th>
             </tr>
@@ -49,6 +50,7 @@
         <td>{$one->apply_time}</td>
         <td><a class='glyphicon glyphicon-eye-open' onclick='javascript:alert("以后写：ajax从中间弹出");'><a/></script></td>
         <td>{$one->apply_text}</td>
+        <td>{$one->apply_user}</td>
         <td>{$one->apply_status}</td>
         <td><span class="glyphicon glyphicon-wrench"><span></td>
     </tr>
@@ -60,9 +62,10 @@ EOF;
         </table>
     </section>
     <input type="text" id="store_search">
-    <input type="button" value="搜索">
+    <input type="button" value="搜索" onclick="getStores()">
     <input type="button" value="添加新物料" id="addNewStore">
-    <input type="button" value="显示操作记录" id="showRecord">
+    <input type="button" value="显示所有库存" id="" onclick="getAllStores()">
+    <input type="button" value="显示操作记录" id="showRecord" onclick="getRecords()">
     <section id="left_div" class="col-md-6">
         <dvi id="store_tab">
 
@@ -74,7 +77,10 @@ EOF;
 <div id="store_op_add" class="status_op" hidden="hidden">
     <span>添加新物料</span><span class="glyphicon glyphicon-remove"></span>
     <br><br>
+    <span>名称：</span>
     <input type="text" id="store_add_name">
+    <br>
+    <span>数量：</span>
     <input type="number" id="store_add_num">
     <br>
     <p id="msg_store_add"></p>
@@ -84,6 +90,7 @@ EOF;
 <!--物料数量更改隐藏快-->
 <div id="store_op_PM" class="status_op" hidden="hidden">
     <span hidden="hidden" id="change_type"></span>
+    <span hidden="hidden" id="change_id"></span>
     <span>物料数量更改</span><span class="glyphicon glyphicon-remove"></span>
     <br><br>
     <span id="text_til"></span>
