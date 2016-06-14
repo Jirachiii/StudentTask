@@ -91,7 +91,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'method' => 'post',
                 ],
             ]):null ?>
-            <?= (Yii::$app->user->identity->status=='管理员')? Html::a('更新', [(Yii::$app->controller->id=='item')?'delete':'item/update', 'id' => $model->id], ['class' => 'btn btn-primary pull-right']):null ?>
+            <?= (Yii::$app->user->identity->status=='管理员')? Html::a('更新', [(Yii::$app->controller->id=='item')?'update':'item/update', 'id' => $model->id], ['class' => 'btn btn-primary pull-right']):null ?>
 
         </p>
     </div>

@@ -63,9 +63,11 @@ AppAsset::register($this);
             [
                 'label' => '用户 (' . Yii::$app->user->identity->st_name . ')',
                 'items'=>[
-                    ['label' => '注销', 'url' => ['/site/logout'],'linkOptions' => ['data-method' => 'post']],
+//                    ['label' => '注销', 'url' => ['/site/logout'],'linkOptions' => ['data-method' => 'post']],
                     ['label'=>$view, 'url'=>$url],
                     isset($view1)?['label'=>$view1, 'url'=>$url1]:'',
+                    ['label' => '注销', 'url' => ['/site/logout'],'linkOptions' => ['data-method' => 'post']],
+
                 ]
             ]
             )
