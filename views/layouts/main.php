@@ -56,7 +56,7 @@ AppAsset::register($this);
         'items' => [
             ['label' => '首页', 'url' => ['/site/index']],
 //            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
+//            ['label' => 'Contact', 'url' => ['/site/contact']],
             Yii::$app->user->isGuest ? (
                 ['label' => '登陆', 'url' => ['/site/login']]
             ) : (
@@ -83,8 +83,8 @@ AppAsset::register($this);
 </div>
 
 <footer class="footer">
-    <div class="container">
-        <p class="pull-left">&copy; 学生工作站管理系统 <?= date('Y') ?></p>
+    <div class="container" style="text-align: center">
+        <p >&copy; 学生工作站管理系统 <?= date('Y') ?></p>
 
 <!--        <p class="pull-right">--><?//= Yii::powered() ?><!--</p>-->
     </div>

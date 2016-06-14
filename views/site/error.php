@@ -17,11 +17,12 @@ $this->title = $name;
         <?= nl2br(Html::encode($message)) ?>
     </div>
 
+    <h1>
+        ~￣△￣~
+    </h1>
     <p>
-        The above error occurred while the Web server was processing your request.
+        请从右上角进入自己的相关页面查看
     </p>
-    <p>
-        Please contact us if you think this is a server error. Thank you.
-    </p>
+
 
 </div>

@@ -23,13 +23,13 @@
 
 
 
-            <select name="status_sel" id="">
-                <option value="1">未审核</option>
-                <option value="2">审核通过</option>
-                <option value="3">审核不通过</option>
-            </select>
+<!--            <select name="status_sel" id="">-->
+<!--                <option value="1">未审核</option>-->
+<!--                <option value="2">审核通过</option>-->
+<!--                <option value="3">审核不通过</option>-->
+<!--            </select>-->
 
-        <table border="1">
+        <table border="1" id="tab_l">
             <tr>
                 <th hidden="hidden">id</th>
                 <th>项目编号</th>
@@ -48,7 +48,7 @@
         <td hidden="hidden">{$one->id}</td>
         <td>{$one->item_id}</td>
         <td>{$one->apply_time}</td>
-        <td><a class='glyphicon glyphicon-eye-open' onclick='javascript:alert("以后写：ajax从中间弹出");'><a/></script></td>
+        <td><span class='glyphicon glyphicon-eye-open' onclick='showItemDetail({$one->item_id});'><span/></script></td>
         <td>{$one->apply_text}</td>
         <td>{$one->apply_user}</td>
         <td>{$one->apply_status}</td>
@@ -100,3 +100,27 @@ EOF;
     <br>
     <input type="button" onclick="store_PM_submit()" value="确定" >
 </div>
+<!--项目详情隐藏块-->
+<section id="back_click_hide" onclick="hideDetail()">
+
+</section>
+<section id="item_detail_hidden">
+    <span class="pull-right glyphicon glyphicon-remove" onclick="hideDetail()"></span>
+    <p>项目内容</p>
+    <div id="item_content">
+
+    </div>
+    <p>项目任务表</p>
+    <div>
+        <table  id="item_detail_content" border="1">
+
+        </table>
+    </div>
+    <p>物料申请记录</p>
+    <div>
+        <table  id="item_store_req" border="1">
+
+        </table>
+    </div>
+    <p id="msg_show"></p>
+</section>

@@ -38,6 +38,8 @@
     -webkit-transition: hidden 2s; /* Safari 和 Chrome */
     display: none;
     z-index: 200001;
+    border-radius: 8px;
+
 
 }
 

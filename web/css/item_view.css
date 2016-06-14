@@ -1,3 +1,187 @@
 img{
     width: 50%;
 }
+.content_div{
+    padding: 20px 30px;
+    border-radius: .8em;
+    box-shadow: 0 1px 0 rgba(0,0,0,.35),0 2px 7px rgba(0,0,0,.35);
+    height: 600px;
+    overflow: auto;
+    -webkit-transition-duration:.6s;
+    -webkit-transition-timing-function:ease;
+    -moz-transition-duration:.6s;
+    -moz-transition-timing-function:ease;
+    -o-transition-duration:.6s;
+    -o-transition-timing-function:ease;
+    transition-duration:.6s;
+    transition-timing-function:ease
+}
+.content_div:hover {
+    -webkit-box-shadow:0 1px 0 rgba(0,0,0,.35),0 3px 14px rgba(0,0,0,.48);
+    box-shadow:0 1px 0 rgba(0,0,0,.35),0 3px 14px rgba(0,0,0,.48)
+}
+h1{
+    text-align: center;
+}
+.author_R{
+    position: relative;
+    right: 0;
+}
+.user-font{
+    /*Lato, 'Helvetica Neue', 'Segoe UI', Helvetica, Arial, sans-serif;*/
+    font-family:"Helvetica Neue";
+    /*opacity: 0.5;*/
+    color: gray!important;
+}
+.time-font{
+    color: gray!important;
+    font-family:"Helvetica Neue" !important;
+    /*opacity: 0.6;*/
+}
+.hex,.post-deco{
+    background: #7eb66f;
+
+}
+.content_word{
+    margin-top: 60px;
+}
+.post-inner{
+    background: #fff;
+    margin-bottom: 30px;
+    position: relative;
+    top:15px;
+    border-radius: 6px;
+    -webkit-box-shadow: 0 1px 0 rgba(0,0,0,.05),0 3px 3px rgba(0,0,0,.05);
+    box-shadow: 0 1px 0 rgba(0,0,0,.05),0 3px 3px rgba(0,0,0,.05);
+    -webkit-transition-duration: .6s;
+    -webkit-transition-timing-function: ease;
+    -moz-transition-duration: .6s;
+    -moz-transition-timing-function: ease;
+    -o-transition-duration: .6s;
+    -o-transition-timing-function: ease;
+    transition-duration: .6s;
+    transition-timing-function: ease;
+}
+.post-deco{
+    position: relative;
+    height: 5px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+.post-deco .hex {
+    /*background: #e5e5e5;*/
+    position: absolute;
+    left: 50%;
+    right: 50%;
+    top: -8px;
+    margin-left: -19px;
+}
+.hex .hex-inner {
+    position: relative;
+    z-index: 4;
+}
+.hex.hex-small {
+    font-size: 14px;
+    width: 38px;
+    height: 22px;
+    line-height: 21px;
+}
+.glyphicon-folder-open {
+    color: #fff;
+    display: inline-block!important;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased!important;
+    -moz-osx-font-smoothing: grayscale;
+    transform: translate(0,0);
+    width: 1em;
+    /*text-align: center;*/
+    left: 11px;
+}
+.hex .corner-1, .hex .corner-2 {
+    background: inherit;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -ms-backface-visibility: hidden;
+    -o-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+.hex .corner-1 {
+    z-index: -1;
+    -webkit-transform: rotate(60deg);
+    -moz-transform: rotate(60deg);
+    -ms-transform: rotate(60deg);
+    -o-transform: rotate(60deg);
+    transform: rotate(60deg);
+}
+.hex .corner-2 {
+    -webkit-transform: rotate(-60deg);
+    -moz-transform: rotate(-60deg);
+    -ms-transform: rotate(-60deg);
+    -o-transform: rotate(-60deg);
+    transform: rotate(-60deg);
+}
+.hr_bom{
+    position: relative;
+    top: 12px;
+    width: 90%;
+    border: 0;
+    border-bottom: 4px solid #EEEEEE;
+    border-radius: 20px;
+}
+.hr_center{
+    /*position: relative;*/
+    /*top: 12px;*/
+    width: 2px;
+    border: 0;
+    border-bottom: 150px solid #EEEEEE;
+    border-radius: 20px;
+}
+.item_mems{
+    position: absolute;
+    margin-top: -150px;
+    margin-left: 10%;
+    /*top: -100px;*/
+    /*left: 20%;*/
+}
+
+#mem_til,.item_status p{
+    font-family: "Microsoft Yahei";
+    font-size: 2em;
+    text-shadow: 0 0 1px #666;
+}
+.name{
+    font-family: "Microsoft Yahei";
+}
+.item_mems span{
+    margin-bottom: 10px;
+}
+.glyphicon-bookmark{
+    color: #31708f;
+}
+.item_status{
+    position: absolute;
+    margin-top: -150px;
+    margin-left: 60%;
+
+    /*right: 150px;*/
+}
+.item_status .btn{
+    margin-top: 30px;
+    margin-right: 20px;
+}
+.item_status p{
+    margin-top: -20px;
+}
+.status_item{
+   color: #0097cf;
+
+}

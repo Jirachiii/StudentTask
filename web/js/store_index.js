@@ -30,6 +30,8 @@ $(function(){
     $(".glyphicon-remove").bind("click",function(e){
         $(this).parent().hide();
     })
+    autoRowSpan(document.getElementById('tab_l'),1,1)
+
 })
 
 //状态修改提交
@@ -48,7 +50,7 @@ function req_submit(){
                 $("#status_change").val()
                 $("tr").each(function(){
                     if($(this).children('td:eq(0)').html()==id){
-                        $(this).children('td:eq(6)').html(data.status);
+                        $(this).children('td:eq(-2)').html(data.status);
                     }
                 })
                 $("#msg_show").html(data.msg)
@@ -198,7 +200,46 @@ function store_delete(id){
 
     }
 }
+function showItemDetail(itemid){
+    $.ajax({
+        url: 'index.php?r=item/itemdetailview',
+        type: 'GET',
+        dataType: 'json',
+        data: {id: itemid,
+        },
+    })
+        .done(function(data) {
+            if(data.success==true){
+                var content='<tr><th>任务内容</th><th>任务成员</th></tr>';
+                for(var i=0;i<data.details.length;i++){
+                    content+="<tr><td>"+data.details[i]['task_content']+"</td><td>"+data.details[i]['members']+"</td></tr>"
+                }
+                var content2='<tr><th>申请时间</th><th>申请内容</th><th>申请人容</th><th>申请状态</th></tr>';
+                for(var i=0;i<data.store.length;i++){
+                    content2+="<tr><td>"+data.store[i]['apply_time']+"</td><td>"+data.store[i]['apply_text']+"</td>" +
+                        "<td>"+data.store[i]['apply_user']+"</td><td>"+data.store[i]['apply_status']+"</td></tr>"
+                }
+                $("#item_content").html(data.item['content'])
+                $("#item_detail_content").html(content)
+                $("#item_store_req").html(content2)
+                item_store_req
+                //$("#msg_show").html('success')
+            }else{
+                $("#msg_show").html(data.msg)
+            }
+        })
+        .fail(function() {
+            console.log("error");
+        })
+    $("#back_click_hide").fadeIn()
+    $("#item_detail_hidden").fadeIn()
+}
 
+function hideDetail(){
+    $("#item_detail_content").html('')
+    $("#back_click_hide").fadeOut()
+    $("#item_detail_hidden").fadeOut(300)
+}
 
 
 function bindBtn(){
@@ -222,4 +263,30 @@ function bindBtn(){
             Mouse(e);
             $("#store_op_PM").css({top:toppos,left:leftpos}).fadeIn(100);
         })
+}
+/**
+ * 合并单元格方法
+ * @param tb
+ * @param row
+ * @param col
+ */
+function autoRowSpan(tb,row,col)
+{
+    //alert()
+    var lastValue="";
+    var value="";
+    var pos=1;
+    for(var i=row;i<tb.rows.length;i++)
+    {
+        value = tb.rows[i].cells[col].innerText;
+        if(lastValue == value)
+        {
+            tb.rows[i].deleteCell(col);
+            tb.rows[i-pos].cells[col].rowSpan = tb.rows[i-pos].cells[col].rowSpan+1;
+            pos++;
+        }else{
+            lastValue = value;
+            pos=1;
+        }
+    }
 }

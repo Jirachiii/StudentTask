@@ -16,3 +16,40 @@
 .glyphicon{
     cursor: pointer;
 }
+#item_detail_hidden{
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%);
+    width: 70%;
+    height: 60%;
+    overflow: auto;
+    border: 1px solid #eee;
+    background-color: whitesmoke;
+    box-shadow: 0 0 5px #666;
+    -ms-transition: hidden 2s;
+    -moz-transition: hidden 2s; /* Firefox 4 */
+    -webkit-transition: hidden 2s; /* Safari 和 Chrome */
+    display: none;
+    z-index: 200001;
+    border-radius: 8px;
+
+
+}
+#back_click_hide{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 200000;
+    background-color:#909090;
+    opacity: 0.5;
+    width: 100%;
+    height: 100%;
+    display: none;
+
+}
+
+#item_detail_hidden img{
+    width: 50%;
+    height: 50%;
+}

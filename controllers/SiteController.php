@@ -2,13 +2,16 @@
 
 namespace app\controllers;
 
+use app\models\Items;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
-
+use app\models\ItemSearch;
+use app\models\ItemUsers;
+use app\models\Users;
 class SiteController extends Controller
 {
     public function behaviors()
@@ -16,10 +19,10 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
+                'only' => ['logout','index','view'],
                 'rules' => [
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout','index','view'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -49,8 +52,52 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+        $searchModel = new ItemSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+//        return $this->render('index');
     }
+    public function actionView($id)
+    {
+        //获取成员
+        $model = Items::findOne($id);
+        $user=new ItemUsers();
+        $members=$user->getItemMembers($model);
+        $members=$user->getItemChineseName($members);
+        //获取中文名
+        $author=Items::findOne($id);
+        $creater=Users::find()->where(['st_id'=>$author->create_by])->one();
+        $updater=Users::find()->where(['st_id'=>$author->update_by])->one();
+//        return $this->render('@app/views/item/view', [
+//            'model' => $model,
+//            'members'=>$members,
+//        ]);
+        if($creater && $updater){
+            return $this->render('@app/views/item/view', [
+                'model' => $model,
+                'creater'=>$creater,
+                'updater'=>$updater,
+                'members'=>$members,
+            ]);
+        }elseif($creater){
+            return $this->render('@app/views/item/view', [
+                'model' => $model,
+                'creater'=>$creater,
+                'members'=>$members,
+            ]);
+        }else{
+            return $this->render('@app/views/item/view', [
+                'model' => $model,
+                'members'=>$members,
+            ]);
+        }
+
+    }
+
 
     public function actionLogin()
     {

@@ -326,6 +326,19 @@ class ItemController extends Controller
         ]);
     }
 
+    /**
+     * ajax我参与的项目详细
+     */
+    public function actionMyitemdetail(){
+        if(empty($_GET['itemid']||!isset($_GET['itemid']))){
+            echo '{"success":false,"msg":"获取失败"}';
+        }
+        $itemid=$_GET['itemid'];
+        $item=new Items();
+        $result=$item->myItemDetail($itemid);
+        echo $result;
+    }
+
 
 
 
@@ -365,7 +378,7 @@ class ItemController extends Controller
             $model->title=$title;
             $model->content=$content;
             $model->create_by=$publisher;
-            $model->status=1;
+            $model->status='未完成';
             $model->create_at=date('Y-m-d H:i',time());
             $model->save(false);
             $memberArray=explode(',',$st_id);

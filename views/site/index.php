@@ -1,53 +1,43 @@
 <?php
-
+use yii\helpers\Html;
+use yii\grid\GridView;
 /* @var $this yii\web\View */
 
 $this->title = 'My Yii Application';
+$itemstatus=['未完成'=>'未完成','已完成'=>'已完成','负责人申请完成'=>'负责人申请完成'];
+
 ?>
+<?php $this->registerCssFile('css/site_index.css');?>
+
 <div class="site-index">
 
     <div class="jumbotron">
-        <h1>Congratulations!</h1>
-
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
+        <h1>学生工作站管理系统</h1>
+        <h3>项目浏览</h3>
     </div>
 
-    <div class="body-content">
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
 
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
+//            'id',
+            'title',
+//            'content:ntext',
+//            'file_path',
+            'create_at',
+            // 'update_at',
+            // 'create_by',
+            // 'update_by',
+            [
+                'attribute' => 'status',
+                'filter' => Html::activeDropDownList($searchModel,'status',$itemstatus,['class'=>'form-control','prompt' =>'显示全部']),
+            ],
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
+//            'status',
 
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
-            </div>
-        </div>
-
-    </div>
+            ['class' => 'yii\grid\ActionColumn','template' => '{view}'],
+        ],
+    ]); ?>
 </div>

@@ -43,7 +43,7 @@ class StoreController extends \yii\web\Controller
     {
         $status='';
         $items=Items::find()->all();
-        $stores=StoreReq::find()->all();
+        $stores=StoreReq::find()->orderBy('item_id DESC,apply_status DESC')->all();
         foreach($stores as $store){
             $user=Users::find()->where(['st_id'=>$store->apply_user])->one();
             $store->apply_user=$user->st_name;
@@ -90,7 +90,7 @@ class StoreController extends \yii\web\Controller
     /**
      * 获取所有操作记录
      */
-    public function actionGetrecords(){
+        public function actionGetrecords(){
         $stores=StoreRecord::find()->asArray()->all();
         echo '{"success":true,"records":'.json_encode($stores,JSON_UNESCAPED_UNICODE).'}';
 

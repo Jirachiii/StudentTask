@@ -136,4 +136,29 @@ class Items extends \yii\db\ActiveRecord
         $item=Items::find()->where(['id'=>$itemid])->asArray()->one();
         return '{"success":true,"item":'.json_encode($item,JSON_UNESCAPED_UNICODE).',"details":'.json_encode($details,JSON_UNESCAPED_UNICODE).',"store":'.json_encode($stores,JSON_UNESCAPED_UNICODE).'}';
     }
+
+    /**
+     * 我参与的项目详情
+     * @param $itemid
+     */
+    public function myItemDetail($itemid){
+        $usernow=Yii::$app->user->identity->st_id;
+        $item=Items::find()->where(['id'=>$itemid])->asArray()->one();
+        $details=ItemDetail::find()->where(['and',['item_id'=>$itemid],['like','members',$usernow]])->asArray()->all();
+//        $pubisher=Users::find()->where(['st_id'=>$item['s']])->one();
+//        $details[$key]['members']=implode(',',$membersArr);
+        foreach($details as $key=>$value){
+            $pubisher=Users::find()->where(['st_id'=>$value['create_by']])->one();
+            $details[$key]['create_by']=$pubisher->st_name;
+            $membersArr=array();
+            $members=explode(',',$value['members']);
+            foreach($members as $one){
+                $user=Users::find()->where(['st_id'=>$one])->one();
+                array_push($membersArr,$user->st_name);
+            }
+            $details[$key]['members']=implode(',',$membersArr);
+        }
+
+        return '{"success":true,"item":'.json_encode($item,JSON_UNESCAPED_UNICODE).',"details":'.json_encode($details,JSON_UNESCAPED_UNICODE).'}';
+    }
 }
