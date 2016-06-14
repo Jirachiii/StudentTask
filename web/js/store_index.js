@@ -71,7 +71,7 @@ function getAllStores(){
 
 //显示所有库存&&搜索库存
 function getStores(){
-    var tab=' <table border="1"> <tr><th hidden="hidden">货物id</th><th>操作信息</th><th>操作时间</th><th>操作类型</th></tr>';
+    var tab=' <table class="table table-hover table-striped"> <tr><th hidden="hidden">货物id</th><th>操作信息</th><th>操作时间</th><th>操作类型</th></tr>';
     $.ajax({
         url: 'index.php?r=store/getstores',
         type: 'GET',
@@ -99,7 +99,7 @@ function getStores(){
 
 //显示所有操作记录
 function getRecords(){
-    var tab=' <table border="1"> <tr><th>货物id</th><th>物料名</th><th>数量</th><th>操作</th></tr>';
+    var tab=' <table class="table table-hover table-striped"> <tr><th>货物id</th><th>物料名</th><th>数量</th><th>操作</th></tr>';
     $.ajax({
         url: 'index.php?r=store/getrecords',
         type: 'GET',

@@ -5,6 +5,7 @@
     cursor: pointer;
 }
 #item_detail_hidden{
+    padding: 10px;
     display: none;
     position: absolute;
     top: 10%;
@@ -12,13 +13,27 @@
     height: 80%;
     border: 1px solid #eee;
     box-shadow: 0 0 5px #666;
-    background-color: #dff0d8;
+    background-color: white;
     z-index: 200010;
     border-radius: 8px;
-
+    overflow: auto;
+}
+.glyphicon-remove{
+    margin-top: 3px;
+    margin-right: 5px;
 }
 #item_detail_hidden img{
     width: 50%;
+}
+#item_detail_hidden h4{
+    text-align: center;
+    font-family: "Microsoft Yahei";
+}
+#item_content{
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    background-color:#EEE;
 }
 #back_click_hide{
     position: absolute;

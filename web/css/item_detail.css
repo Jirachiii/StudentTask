@@ -9,6 +9,7 @@
 .myedit{
     cursor: pointer;
     text-decoration: none!important;
+    color: black;
 }
 #back_click_hide{
     position: absolute;
@@ -22,16 +23,23 @@
     display: none;
 
 }
+#item_content{
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    background-color:#EEE;
+}
 #item_detail_hidden{
+    padding: 10px;
     position: absolute;
     top: 10%;
     left: 50%;
     transform: translate(-50%);
     width: 70%;
-    height: 60%;
+    height: 85%;
     overflow: auto;
     border: 1px solid #eee;
-    background-color: whitesmoke;
+    background-color: white;
     box-shadow: 0 0 5px #666;
     -ms-transition: hidden 2s;
     -moz-transition: hidden 2s; /* Firefox 4 */
@@ -42,7 +50,10 @@
 
 
 }
-
+#item_detail_hidden h4{
+    text-align: center;
+    font-family: "Microsoft Yahei";
+}
 #item_detail_hidden img{
     width: 50%;
     height: 50%;

@@ -34,9 +34,9 @@ function showItemDetail(itemid){
                     content2+="<tr><td>"+data.store[i]['apply_time']+"</td><td>"+data.store[i]['apply_text']+"</td>" +
                         "<td>"+data.store[i]['apply_user']+"</td><td>"+data.store[i]['apply_status']+"</td></tr>"
                 }
-                $("#item_content").html(data.item['content'])
                 $("#item_detail_content").html(content)
                 $("#item_store_req").html(content2)
+                $("#item_content").html(data.item['content'])
                 item_store_req
                 //$("#msg_show").html('success')
             }else{

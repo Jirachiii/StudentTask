@@ -185,7 +185,9 @@ class ItemController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
+        $item_details=ItemDetail::deleteAll(['item_id'=>$id]);
+        $item_users=ItemUsers::deleteAll(['item_id'=>$id]);
+        $item_req=StoreReq::deleteAll(['item_id'=>$id]);
         return $this->redirect(['index']);
     }
 

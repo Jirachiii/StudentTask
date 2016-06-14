@@ -1,7 +1,8 @@
 <?php $this->registerCssFile('css/myitem.css');?>
+<?php //$this->registerCssFile('css/main.css');?>
 <?php $this->registerJsFile('js/myitem.js');?>
 <div>
-    <table class="myitem" border="1">
+    <table class="myitem table table-hover table-striped " >
         <tr>
             <th>项目名称</th>
             <th>项目发布时间</th>
@@ -17,7 +18,7 @@
                         <td>{$myitem->create_at}</td>
                         <td>{$myitem->update_at}</td>
                         <td>{$myitem->status}</td>
-                        <td><span class="glyphicon glyphicon-eye-open" onclick="showItem({$myitem->id})"></span></td>
+                        <td>&nbsp;&nbsp;<span class="glyphicon glyphicon-eye-open" onclick="showItem({$myitem->id})"></span></td>
                     </tr>
 EOF;
                 echo $content;
@@ -34,9 +35,9 @@ EOF;
     <div id="item_content">
 
     </div>
-    <p>我的任务：</p>
+    <h4>我的任务：</h4>
     <div id="">
-        <table id="task_content" border="1">
+        <table id="task_content" class="table table-hover">
 
         </table>
     </div>

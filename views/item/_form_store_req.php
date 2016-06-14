@@ -1,5 +1,5 @@
 <div id="store">
-    <table border="1">
+    <table class="table table-hover table-striped">
         <tr>
             <th>申请时间</th>
             <th>申请内容</th>

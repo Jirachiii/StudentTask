@@ -91,7 +91,7 @@ class StoreController extends \yii\web\Controller
      * 获取所有操作记录
      */
         public function actionGetrecords(){
-        $stores=StoreRecord::find()->asArray()->all();
+        $stores=StoreRecord::find()->orderBy('change_time DESC')->asArray()->all();
         echo '{"success":true,"records":'.json_encode($stores,JSON_UNESCAPED_UNICODE).'}';
 
     }

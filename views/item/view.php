@@ -63,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <hr class="hr_center">
     <br>
     <div class="item_mems">
-       <p id="mem_til">任务成员</p>
+       <p id="mem_til">项目负责人</p>
 
         <?php
         foreach ($members as $key => $value) {

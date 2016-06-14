@@ -4,7 +4,7 @@ use app\models\ItemUsers;
 <?php $this->registerCssFile('css/item_detail.css');?>
 <h1 class="I_D_title">我负责的项目</h1>
 <section>
-    <table class="tab_item_detail tab_center" border="1">
+    <table class="tab_item_detail tab_center table table-hover table-striped" >
         <tr>
             <th>项目名称</th>
             <th>发布日期</th>
@@ -14,8 +14,12 @@ use app\models\ItemUsers;
             <th>项目管理</th>
         </tr>
         <?php
-            foreach($items as $item){
+            foreach($items as $key=>$item){
                 $info=$item->iteminfo[0];
+//                echo '<h1>'.$key.'</h1>';
+//                $info=$item->iteminfo;
+//                print_r($info);
+//                echo "<hr>";
                 $itemusers=new ItemUsers();
                 $create_by_CN=$itemusers->getChineseName($info['create_by']);
                 $st_admins=$itemusers->getStudentAdmins($info['id']);
@@ -44,20 +48,18 @@ EOF;
 </section>
 <section id="item_detail_hidden">
     <span class="pull-right glyphicon glyphicon-remove"></span>
-    <p>项目内容</p>
     <div id="item_content">
 
     </div>
-    <p>项目任务表</p>
-    <div>
-        <table  id="item_detail_content" border="1">
+    <h4>项目任务表</h4>
+    <div >
+        <table id="item_detail_content" class="table table-hover table-striped " >
 
         </table>
     </div>
-    <p>物料申请记录</p>
+    <h4>物料申请记录</h4>
     <div>
-        <table  id="item_store_req" border="1">
-
+        <table  id="item_store_req" class="table table-hover table-striped ">
         </table>
     </div>
     <p id="msg_show"></p>
