@@ -354,22 +354,17 @@ class ItemController extends Controller
             $members[]=$value['st_id'];
         }
         $info['members']=$members;
-        $result=json_encode($info,JSON_UNESCAPED_UNICODE);
-
-
-        // foreach ($info as $key => $value) {
-        //     if(!is_array($value)){
-        //         $info[$key]=htmlspecialchars($value); 
-        //         // print_r($value);
-        //     }
-            
-        // }
+        $info['content']=strip_tags($info['content']);
 
         $result=json_encode($info,JSON_UNESCAPED_UNICODE);
-        print_r($result);
+        echo $info['content'];
     }
 
+    public function actionMobilemembers(){
+        $members=Users::find()->where(['status'=>'干部'])->asArray()->all();
+        echo json_encode($members,JSON_UNESCAPED_UNICODE);
 
+    }
 
     public function  actionMobileitemcreate($title,$content,$st_id,$publisher){
         $connection = \Yii::$app->db;

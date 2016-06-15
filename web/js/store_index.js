@@ -99,7 +99,7 @@ function getStores(){
 
 //显示所有操作记录
 function getRecords(){
-    var tab=' <table class="table table-hover table-striped"> <tr><th>货物id</th><th>物料名</th><th>数量</th><th>操作</th></tr>';
+    var tab=' <table class="table table-hover table-striped" id="tb_Record"> <tr><th>货物（id）</th><th>详情</th><th>时间</th><th>操作</th></tr>';
     $.ajax({
         url: 'index.php?r=store/getrecords',
         type: 'GET',
@@ -114,6 +114,8 @@ function getRecords(){
                 tab+='</table>';
                 $("#store_tab").html(tab)
                 bindBtn()
+    autoRowSpan(document.getElementById('tb_Record'),0,0)
+                
             }else{
                 $("#store_tab").html(data.msg)
             }

@@ -91,7 +91,12 @@ class StoreController extends \yii\web\Controller
      * 获取所有操作记录
      */
         public function actionGetrecords(){
-        $stores=StoreRecord::find()->orderBy('change_time DESC')->asArray()->all();
+        $stores=StoreRecord::find()->orderBy('store_id DESC,change_time DESC')->asArray()->all();
+        foreach ($stores as $key => $value) {
+            $one=StoreTab::find()->where(['id'=>$value['store_id']])->asArray()->one();
+            // echo $store->createCommand()->getRawSql();
+            $stores[$key]['store_id']=$one['store_name'].'('.$value['store_id'].')';
+        }
         echo '{"success":true,"records":'.json_encode($stores,JSON_UNESCAPED_UNICODE).'}';
 
     }

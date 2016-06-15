@@ -22,7 +22,7 @@ EOF;
     }
     foreach($tasks as $key=>$task){
         echo "<script>
-                        $(\"label:contains('任务'):eq($key)\").next('input').val({$task})
+                        $(\"label:contains('任务'):eq($key)\").next('input').val('{$task}')
 </script>";
     }
     foreach($members as $key=>$member){

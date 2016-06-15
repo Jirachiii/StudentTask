@@ -64,16 +64,16 @@ class StoreRecord extends \yii\db\ActiveRecord
         $user=yii::$app->user->identity->st_id;
         switch ($change_info){
             case '新增':
-                $info='新增了新物料：'.$store->store_name;
+                $info=$store->store_name.'：新增此新物料';
                 break;
             case '进库':
-                $info=$store->store_name.":新增了".$changenum.',现有:'.$store->store_num;//xxx：新进了xx个
+                $info=$store->store_name."：新增了".$changenum.'，现有：'.$store->store_num;//xxx：新进了xx个
                 break;
             case '出库':
-                $info=$store->store_name.":减少了".$changenum.',现有:'.$store->store_num;
+                $info=$store->store_name."：减少了".$changenum.'，现有：'.$store->store_num;
                 break;
             case '删除':
-                $info='删除了物料：'.$store->store_name.",删除前有：".$store->store_num;
+                $info=$store->store_name.'：删除了物料，'."删除前有：".$store->store_num;
                 break;
         }
         $record->store_id=$store->id;
