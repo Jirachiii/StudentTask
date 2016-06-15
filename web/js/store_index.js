@@ -30,6 +30,14 @@ $(function(){
     $(".glyphicon-remove").bind("click",function(e){
         $(this).parent().hide();
     })
+    //搜索的回车
+     $('#store_search').bind('keypress',function(event){
+            if(event.keyCode == "13")    
+            {
+                getStores();
+                return false;
+            }
+        });
     autoRowSpan(document.getElementById('tab_l'),1,1)
 
 })
@@ -99,7 +107,7 @@ function getStores(){
 
 //显示所有操作记录
 function getRecords(){
-    var tab=' <table class="table table-hover table-striped" id="tb_Record"> <tr><th>货物（id）</th><th>详情</th><th>时间</th><th>操作</th></tr>';
+    var tab=' <table class="table table-hover " id="tb_Record"> <tr><th>货物（id）</th><th>详情</th><th>时间</th><th>操作</th></tr>';
     $.ajax({
         url: 'index.php?r=store/getrecords',
         type: 'GET',
@@ -108,7 +116,7 @@ function getRecords(){
         .done(function(data) {
             if(data.success==true){
                 for(var i=0;i<data.records.length;i++){
-                    tab+='<tr><td>'+data.records[i]['store_id']+'</td><td>'+data.records[i]['changeinfo']+'</td><td>'+data.records[i]['change_time']+'</td>' +
+                    tab+='<tr><td class="active">'+data.records[i]['store_id']+'</td><td>'+data.records[i]['changeinfo']+'</td><td>'+data.records[i]['change_time']+'</td>' +
                         '<td>'+data.records[i]['change_type']+'</td></tr>';
                 }
                 tab+='</table>';
