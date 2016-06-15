@@ -341,10 +341,23 @@ class ItemController extends Controller
         echo $result;
     }
 
+// 以下是手机接口
 
 
-
-    public function actionMobile($id){
+    /**
+     * 获取所有项目
+     * @return [type] [description]
+     */
+    public function actionMobileitems(){
+        $items=Items::find()->select(['id','title','create_at','create_by','status'])->asArray()->all();
+        echo json_encode($items,JSON_UNESCAPED_UNICODE);
+    }
+    /**
+     * 显示项目详细
+     * @param  [type] $id [description]
+     * @return [type]     [description]
+     */
+    public function actionItem($id){
         // print_r(Yii::$app->user->identity->st_id );die;
         $info=(new Query)->from('items')->where(['id'=>$id])->one();
         $item=Items::findOne($id);
@@ -357,15 +370,41 @@ class ItemController extends Controller
         $info['content']=strip_tags($info['content']);
 
         $result=json_encode($info,JSON_UNESCAPED_UNICODE);
-        echo $info['content'];
+        echo $result;
     }
+    /**
+     * 显示项目的负责人
+     * @param  [type] $id [description]
+     * @return [type]     [description]
+     */
+    public function actionMobileitemmembers($id){
+        $members=ItemUsers::find()->where(['item_id'=>$id])->asArray()->all();
+        $memarr=array();
+        if(!empty($members)){
+            foreach ($members as $key => $value) {
+                $user=Users::find()->where(['st_id'=>$value['st_id']])->one();
+                array_push($memarr, $user->st_name);
+            }
+        }
+        echo json_encode($memarr,JSON_UNESCAPED_UNICODE);
+    }
+    /**
+     * 显示所有负责人
+     */
 
     public function actionMobilemembers(){
         $members=Users::find()->where(['status'=>'干部'])->asArray()->all();
         echo json_encode($members,JSON_UNESCAPED_UNICODE);
 
     }
-
+    /**
+     * 创建项目
+     * @param  [type] $title     [description]
+     * @param  [type] $content   [description]
+     * @param  [type] $st_id     [description]
+     * @param  [type] $publisher [description]
+     * @return [type]            [description]
+     */
     public function  actionMobileitemcreate($title,$content,$st_id,$publisher){
         $connection = \Yii::$app->db;
         try {

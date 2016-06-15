@@ -67,10 +67,10 @@ class StoreRecord extends \yii\db\ActiveRecord
                 $info=$store->store_name.'：新增此新物料';
                 break;
             case '进库':
-                $info=$store->store_name."：新增了".$changenum.'，现有：'.$store->store_num;//xxx：新进了xx个
+                $info=$store->store_name."：进库了".$changenum.'，现有：'.$store->store_num;//xxx：新进了xx个
                 break;
             case '出库':
-                $info=$store->store_name."：减少了".$changenum.'，现有：'.$store->store_num;
+                $info=$store->store_name."：出库了".$changenum.'，现有：'.$store->store_num;
                 break;
             case '删除':
                 $info=$store->store_name.'：删除了物料，'."删除前有：".$store->store_num;
