@@ -68,8 +68,14 @@ class Items extends \yii\db\ActiveRecord
 //        return $this->hasMany(ItemDetailPerson::className(), ['item_details_id' => 'id'])
 //            ->viaTable('item_details', ['item_id' => 'id']);
 //    }
-
-    public function addDetailTask($item_id,$tasks,$members,$item_id){
+/**
+ * 为项目添加任务
+ * @param [int] $item_id [项目id]
+ * @param [array] $tasks   [任务数组]
+ * @param [array] $members [成员数组]
+ */
+    public function addDetailTask($item_id,$tasks,$members){
+    // public function addDetailTask($item_id,$tasks,$members,$item_id){
         $connection = \Yii::$app->db;
         $transaction = $connection->beginTransaction();
         try {
@@ -78,9 +84,7 @@ class Items extends \yii\db\ActiveRecord
                 $item_detail->item_id=$item_id;
                 $item_detail->task_content=$task;
                 $item_detail->create_at=date('Y-m-d H:i',time());
-//                $item_detail->update_at='2016';
                 $item_detail->create_by=Yii::$app->user->identity->st_id;
-//                $item_detail->update_by='F';
                 $taskMembers=array();
                 foreach($members[$key] as $member){
                     array_push($taskMembers,$member);

@@ -56,7 +56,7 @@ function req_submit(){
             if(data.success==true){
                 var id=$("#req_id").html()
                 $("#status_change").val()
-                $("tr").each(function(){
+                $("#tab_l tr").each(function(){
                     if($(this).children('td:eq(0)').html()==id){
                         $(this).children('td:eq(-2)').html(data.status);
                     }
@@ -79,7 +79,7 @@ function getAllStores(){
 
 //显示所有库存&&搜索库存
 function getStores(){
-    var tab=' <table class="table table-hover table-striped"> <tr><th hidden="hidden">货物id</th><th>操作信息</th><th>操作时间</th><th>操作类型</th></tr>';
+    var tab=' <table class="table table-hover table-striped"> <tr><th hidden="hidden">货物id</th><th>操作信息</th><th>剩余数量</th><th>操作类型</th></tr>';
     $.ajax({
         url: 'index.php?r=store/getstores',
         type: 'GET',

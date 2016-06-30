@@ -40,6 +40,11 @@ class Users extends \yii\db\ActiveRecord {
             [['st_id'], 'unique'],
         ];
     }
+    public static function getName($st_id){
+            $one=Users::find()->where(['st_id'=>$st_id])->one();
+            return $st_id.$one->st_name;
+
+    }
 
     /**
      * @inheritdoc

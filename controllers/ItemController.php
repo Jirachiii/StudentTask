@@ -295,7 +295,7 @@ class ItemController extends Controller
         $already=ItemDetail::deleteAll(['item_id'=>$item_id]);
 //        $already->delete();
         $items=new Items();
-        $items->addDetailTask($item_id,$tasks,$members,$item_id);
+        $items->addDetailTask($item_id,$tasks,$members);
         //物料申请插入
         if(isset($_POST['store_req'])&&trim($_POST['store_req'])!=''){
             $store=new StoreReq();
@@ -349,12 +349,14 @@ class ItemController extends Controller
      * @return [type] [description]
      */
     public function actionMobileitems(){
+        $arr=array();
         $items=Items::find()->select(['id','title','create_at','create_by','status'])->asArray()->all();
-        echo json_encode($items,JSON_UNESCAPED_UNICODE);
+        $arr['list']=$items;
+        echo json_encode($arr,JSON_UNESCAPED_UNICODE);
     }
     /**
      * 显示项目详细
-     * @param  [type] $id [description]
+     * @param  [int] $id [项目id]
      * @return [type]     [description]
      */
     public function actionItem($id){
@@ -364,12 +366,19 @@ class ItemController extends Controller
         $users=$item->persons;
         $members=array();
         foreach ($users as $value) {
-            $members[]=$value['st_id'];
+            // $one=Users::find()->where(['st_id'=>$value['st_id']])->one();
+            $members[]=Users::getName($value['st_id']);
         }
-        $info['members']=$members;
+        $info['create_by']=Users::getName($info['create_by']);
+        if(!empty($info['update_by'])){
+            $info['update_by']=Users::getName($info['update_by']);
+        }
+        // $info['members']=$members;
+        $info['members']=implode(',',$members);
         $info['content']=strip_tags($info['content']);
-
-        $result=json_encode($info,JSON_UNESCAPED_UNICODE);
+        $arr=array();
+        $arr['list'][]=$info;
+        $result=json_encode($arr,JSON_UNESCAPED_UNICODE);
         echo $result;
     }
     /**
@@ -386,7 +395,9 @@ class ItemController extends Controller
                 array_push($memarr, $user->st_name);
             }
         }
-        echo json_encode($memarr,JSON_UNESCAPED_UNICODE);
+        $arr=array();
+        $arr['list']=$memarr;
+        echo json_encode($arr,JSON_UNESCAPED_UNICODE);
     }
     /**
      * 显示所有负责人
@@ -394,7 +405,9 @@ class ItemController extends Controller
 
     public function actionMobilemembers(){
         $members=Users::find()->where(['status'=>'干部'])->asArray()->all();
-        echo json_encode($members,JSON_UNESCAPED_UNICODE);
+        $arr=array();
+        $arr['list']=$members;
+        echo json_encode($arr,JSON_UNESCAPED_UNICODE);
 
     }
     /**
@@ -416,6 +429,29 @@ class ItemController extends Controller
             $model->create_by=$publisher;
             $model->status='未完成';
             $model->create_at=date('Y-m-d H:i',time());
+            $model->save(false);
+            $memberArray=explode(',',$st_id);
+            $user->insertMembers($memberArray,$model->id);
+            $transaction = $connection->beginTransaction();
+            $transaction->commit();
+        } catch(Exception $e) {
+            $transaction->rollBack();
+        }
+
+
+
+    }
+    public function  actionMobileitemedit($id,$title,$content,$st_id,$status,$updater){
+        $connection = \Yii::$app->db;
+        try {
+            $model = Items::findOne($id);
+            $user=new ItemUsers();
+            // $allusers=Users::find()->all();
+            $model->title=$title;
+            $model->content=$content;
+            $model->update_by=$updater;
+            $model->status=$status;
+            $model->update_at=date('Y-m-d H:i',time());
             $model->save(false);
             $memberArray=explode(',',$st_id);
             $user->insertMembers($memberArray,$model->id);
